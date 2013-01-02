@@ -56,9 +56,17 @@ class Event
 	* @param array $event Associative array of event data
 	* @return void
 	*/
-	public function __construct($event)
+	public function __construct($event = null)
 	{
-		if (is_array($event))
+		if (is_null($event))
+		{
+			$this->id = null;
+			$this->title = null;
+			$this->description = null;
+			$this->start = null;
+			$this->end = null;		
+		}	
+		elseif (is_array($event))
 		{
 			$this->id = $event['event_id'];
 			$this->title = $event['event_title'];

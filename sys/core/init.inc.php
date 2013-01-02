@@ -1,5 +1,14 @@
 <?php
 
+	// Enable session
+	session_start();
+	
+	// Generate an anti-CSRF token if one doesn't exist
+	if (!isset($_SESSION['token']))
+	{
+		$_SESSION['token'] = sha1(uniqid(mt_rand(), true));
+	}
+
 	// Include the necessary configuration info
 	include_once '../sys/config/db-cred.inc.php';
 	
