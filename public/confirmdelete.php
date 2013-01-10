@@ -1,28 +1,25 @@
 <?php
 
 /*
- * Make sure the event ID was passed
+ * Start the session
  */
-if ( isset($_GET['event_id']) )
+session_start();
+
+/*
+ * Make sure an event ID was passed and the user is logged in
+ */
+if ( isset($_POST['event_id']) && isset($_SESSION['user']) )
 {
     /*
-     * Make sure the ID is an integer
+     * Collect the event ID from the URL string
      */
-    $id = preg_replace('/[^0-9]/', '', $_GET['event_id']);
-
-    /*
-     * If the ID isn't valid, send the user to the main page
-     */
-    if ( empty($id) )
-    {
-        header("Location: ./");
-        exit;
-    }
+    $id = (int) $_POST['event_id'];
 }
 else
 {
     /*
      * Send the user to the main page if no ID is supplied
+     * or the user is not logged in
      */
     header("Location: ./");
     exit;
@@ -34,23 +31,23 @@ else
 include_once '../sys/core/init.inc.php';
 
 /*
+ * Load the calendar
+ */
+$cal = new Calendar($dbo);
+$markup = $cal->confirmDelete($id);
+
+/*
  * Output the header
  */
 $page_title = "View Event";
 $css_files = array("style.css", "admin.css");
 include_once 'assets/common/header.inc.php';
 
-/*
- * Load the calendar
- */
-$cal = new Calendar($dbo);
-
 ?>
 
 <div id="content">
-<?php echo $cal->displayEvent($id) ?>
+<?php echo $markup; ?>
 
-    <a href="./">&laquo; Back to the calendar</a>
 </div><!-- end #content -->
 
 <?php
